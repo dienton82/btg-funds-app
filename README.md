@@ -110,3 +110,47 @@ Comando de validación rápida del repositorio:
 - La UI refleja en tiempo real el saldo, el estado de cada fondo y el historial a partir del estado centralizado en el servicio.
 - Los nombres de fondos se formatean en la capa de presentación para mejorar legibilidad sin alterar el dato original.
 - El proyecto está preparado para revisión local sin configuración adicional distinta a `npm install`.
+
+## Uso de inteligencia artificial y control de desarrollo
+
+La inteligencia artificial se utilizó como herramienta de apoyo durante el desarrollo, no como sustituto del criterio técnico. Su uso se concentró en tareas de generación asistida de código, refactorización localizada, revisión de consistencia y validación de alternativas de implementación.
+
+Todas las decisiones relevantes fueron revisadas manualmente antes de incorporarse al proyecto. La definición de arquitectura, la interpretación de reglas del negocio, la validación de flujos y la aceptación final de cada cambio quedaron bajo control humano. Este criterio fue especialmente importante porque las herramientas de IA no conocen por sí mismas el contexto completo del problema ni los objetivos específicos de la prueba.
+
+El trabajo se condujo bajo un flujo estructurado de análisis, diseño, implementación y verificación. Este enfoque permitió utilizar la IA como acelerador de tareas concretas sin perder control sobre mantenibilidad, alcance ni coherencia técnica.
+
+## Enfoque de calidad y verificación
+
+El proyecto se desarrolló con TypeScript en modo estricto para reforzar consistencia de tipos y reducir errores en tiempo de compilación. La solución mantiene una separación clara entre lógica de negocio, utilidades compartidas y componentes de presentación.
+
+Además de la validación automática por compilación, se realizó verificación manual de los flujos principales de suscripción, cancelación, actualización de saldo e historial. Antes de considerar la entrega, se comprobó el comportamiento funcional esperado y se revisaron estados visibles, mensajes y validaciones.
+
+También se incorporó una capa ligera de control del repositorio mediante scripts de verificación. Esto permitió validar compilación, build y revisión básica del estado general del proyecto antes del cierre.
+
+## Seguridad y buenas prácticas
+
+La implementación sigue un conjunto de prácticas básicas de seguridad frontend alineadas con criterios comunes de OWASP para este tipo de solución. No se utiliza `innerHTML` ni mecanismos de renderizado inseguro en la UI. La entrada del usuario se valida desde formularios reactivos y las reglas sensibles del flujo se concentran en servicios en lugar de dispersarse en componentes.
+
+El proyecto no expone secretos, claves ni configuración sensible en frontend. El uso de tipado fuerte ayuda a reducir errores accidentales y a hacer más predecible el manejo del estado. Los errores visibles al usuario se presentan de forma controlada, sin exponer detalles internos innecesarios.
+
+Adicionalmente, se realizó una revisión manual orientada a detectar riesgos frontend frecuentes, duplicación innecesaria y prácticas que pudieran afectar mantenibilidad o seguridad básica.
+
+## Scripts y revisión del código
+
+El repositorio incluye una carpeta `scripts/` con utilidades de apoyo para validación previa a entrega. Estos scripts no reemplazan la revisión técnica, pero agregan una capa ligera y repetible de control.
+
+Scripts disponibles:
+
+- `verify.ps1`: ejecuta validaciones de compilación, build y, cuando aplica, pruebas disponibles.
+- `review-security.ps1`: guía una revisión manual breve de aspectos de seguridad y robustez.
+- `review-frontend.ps1`: guía una revisión manual de UI, responsive, estados y consistencia visual.
+
+En conjunto, estos scripts permiten verificar compilación, build, checklist de seguridad y revisión básica de frontend antes de cerrar cambios relevantes.
+
+## Orquestación del desarrollo
+
+El desarrollo se ejecutó con apoyo de herramientas de IA, pero dentro de un flujo controlado. La dinámica seguida fue: definición del problema, generación asistida de propuestas de implementación, validación manual de los cambios y posterior iteración controlada.
+
+Se evitó incorporar código generado sin contexto suficiente o sin revisión explícita. Cuando surgieron alternativas con impacto funcional o visual, se priorizó una solución entendible, mantenible y consistente con el alcance de la prueba.
+
+El criterio principal durante todo el proceso fue favorecer claridad, control y capacidad de revisión por encima de velocidad de entrega o volumen de cambios.
