@@ -154,3 +154,45 @@ El desarrollo se ejecutó con apoyo de herramientas de IA, pero dentro de un flu
 Se evitó incorporar código generado sin contexto suficiente o sin revisión explícita. Cuando surgieron alternativas con impacto funcional o visual, se priorizó una solución entendible, mantenible y consistente con el alcance de la prueba.
 
 El criterio principal durante todo el proceso fue favorecer claridad, control y capacidad de revisión por encima de velocidad de entrega o volumen de cambios.
+
+## Uso de inteligencia artificial y control del desarrollo
+
+El desarrollo se realizó desde Visual Studio Code con apoyo de extensiones y herramientas de inteligencia artificial utilizadas de forma complementaria. Se emplearon ChatGPT, Codex, GitHub Copilot y Gemini como soporte durante distintas etapas del trabajo, cada una con un rol específico dentro de un flujo controlado.
+
+ChatGPT se utilizó como apoyo en arquitectura, análisis de alternativas, diseño de soluciones y evaluación de decisiones técnicas. Codex se utilizó para ejecutar tareas estructuradas, aplicar cambios concretos y generar código bajo instrucciones explícitas y controladas. GitHub Copilot se aprovechó como asistencia de autocompletado y para fragmentos repetitivos de implementación. Gemini se utilizó como apoyo adicional para contraste de soluciones y validación complementaria de criterios técnicos.
+
+La IA fue utilizada como herramienta de apoyo, no como fuente de verdad. Todas las decisiones fueron revisadas manualmente y el control final del código recayó en el desarrollador. La IA no conoce el contexto completo del negocio, por lo que cada resultado fue evaluado y ajustado antes de ser incorporado al proyecto.
+
+## Orquestación del desarrollo
+
+El desarrollo se ejecutó bajo un flujo estructurado asistido por IA. Ese flujo siguió cuatro etapas: análisis del requerimiento, diseño de la solución, implementación guiada y verificación con ajustes posteriores.
+
+Durante este proceso se evitó generar código sin contexto suficiente o sin validación explícita. Cada propuesta se evaluó antes de integrarse al repositorio, priorizando claridad, mantenibilidad y control sobre automatización.
+
+## Revisión cruzada del código
+
+El código generado o sugerido durante el desarrollo fue contrastado mediante múltiples herramientas de IA. En la práctica, una herramienta podía proponer una implementación inicial mientras otra se utilizaba para revisar posibles mejoras, detectar inconsistencias, señalar riesgos o cuestionar decisiones técnicas.
+
+Este enfoque de revisión cruzada ayudó a validar decisiones de diseño, detectar errores potenciales y elevar la calidad general del código antes de su incorporación. Aun así, la validación final de cada cambio siempre fue manual.
+
+## Enfoque de seguridad y calidad
+
+El proyecto sigue prácticas básicas de seguridad frontend alineadas con criterios comunes de OWASP. No se utiliza `innerHTML` ni mecanismos de render inseguro, la entrada del usuario se valida en formularios reactivos, no existen secretos expuestos en frontend y la lógica sensible se centraliza en servicios.
+
+El uso de tipado fuerte reduce errores accidentales y ayuda a mantener coherencia entre dominio, estado y presentación. Además, el código fue revisado para evitar duplicación innecesaria, malas prácticas comunes y cualquier exposición accidental de datos sensibles.
+
+## Scripts de verificación y revisión
+
+La carpeta `scripts/` reúne utilidades de apoyo para revisar el estado del proyecto antes de entregar cambios. Su objetivo es reforzar control operativo y facilitar una validación mínima repetible.
+
+- `verify.ps1`: ejecuta validaciones de compilación y build.
+- `review-security.ps1`: guía una revisión manual breve mediante un checklist de seguridad.
+- `review-frontend.ps1`: guía una revisión manual de consistencia visual, responsive y estados de la interfaz.
+
+Estos scripts funcionan como una capa ligera de verificación previa a entrega y ayudan a mantener control sobre compilación, calidad visible y revisión básica del código.
+
+## Despliegue y acceso
+
+El proyecto fue publicado en GitHub como repositorio público para permitir revisión completa del código fuente, estructura y decisiones de implementación.
+
+La aplicación puede ejecutarse localmente sin configuración adicional distinta a la instalación de dependencias. Esta decisión busca facilitar la revisión técnica del evaluador y reducir fricción durante la puesta en marcha del proyecto.
