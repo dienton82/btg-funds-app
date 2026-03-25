@@ -1,0 +1,150 @@
+<section class="funds-page" *ngIf="vm$ | async as vm">
+  <section
+    class="feedback-toast"
+    *ngIf="feedback() as currentFeedback"
+    [class.feedback-toast--error]="currentFeedback.type === 'error'"
+    [attr.role]="currentFeedback.type === 'error' ? 'alert' : 'status'"
+    aria-live="polite"
+  >
+    <div class="feedback-toast__body">
+      <p class="feedback-toast__eyebrow">
+        {{ currentFeedback.type === 'error' ? 'No se pudo completar la acción' : 'Operación completada' }}
+      </p>
+      <p class="feedback-toast__message">{{ currentFeedback.message }}</p>
+    </div>
+  </section>
+
+  <section
+    class="cancel-overlay"
+    *ngIf="isCancelPanelOpen() && pendingCancellationFund() as fund"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-labelledby]="'cancel-title-' + fund.id"
+  >
+    <button
+      type="button"
+      class="cancel-overlay__backdrop"
+      aria-label="Cerrar confirmación de cancelación"
+      (click)="onDismissCancellation()"
+    ></button>
+
+    <div class="cancel-dialog">
+      <p class="cancel-dialog__eyebrow">Confirmación de cancelación</p>
+      <h2 class="cancel-dialog__title" [id]="'cancel-title-' + fund.id">
+        ¿Deseas cancelar la participación en {{ formatFundName(fund.name) }}?
+      </h2>
+      <p class="cancel-dialog__copy">
+        El monto suscrito volverá a tu saldo disponible y se registrará una transacción de cancelación en el historial.
+      </p>
+
+      <div class="cancel-dialog__actions">
+        <button type="button" class="button button--ghost" (click)="onDismissCancellation()">
+          No, conservar participación
+        </button>
+        <button
+          type="button"
+          class="button button--danger"
+          (click)="onConfirmCancellation({ fundId: fund.id })"
+        >
+          Sí, cancelar inscripción
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <header class="hero">
+    <div class="hero__content">
+      <p class="hero__eyebrow">BTG Pactual</p>
+      <h1 class="hero__title">Fondos disponibles</h1>
+      <p class="hero__subtitle">
+        Explora el portafolio disponible y gestiona nuevas suscripciones o cancelaciones
+        desde una experiencia clara, moderna y lista para demo.
+      </p>
+    </div>
+
+    <aside class="balance-card" aria-label="Resumen de saldo actual">
+      <span class="balance-card__label">Saldo actual</span>
+      <strong class="balance-card__amount">
+        {{ vm.balance | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
+      </strong>
+      <p class="balance-card__hint">
+        Movimientos registrados: {{ vm.transactions.length }}
+      </p>
+    </aside>
+  </header>
+
+  <section class="catalog" aria-labelledby="funds-section-title">
+    <div class="section-heading">
+      <div>
+        <p class="section-heading__eyebrow">Portafolio</p>
+        <h2 id="funds-section-title" class="section-heading__title">Selecciona un fondo para continuar</h2>
+      </div>
+      <p class="section-heading__description">
+        Cada opción muestra categoría, monto mínimo, disponibilidad y estado de participación.
+      </p>
+    </div>
+
+    <div class="fund-grid">
+      <article class="fund-card" *ngFor="let fund of vm.funds; trackBy: trackByFundId">
+        <div class="fund-card__top">
+          <span class="fund-card__category">{{ fund.category }}</span>
+          <span
+            class="fund-card__status"
+            [class.fund-card__status--subscribed]="vm.subscribedFundIds.has(fund.id)"
+          >
+            {{ vm.subscribedFundIds.has(fund.id) ? 'Suscrito' : 'Disponible' }}
+          </span>
+        </div>
+
+        <div class="fund-card__body">
+          <h3 class="fund-card__title">{{ formatFundName(fund.name) }}</h3>
+          <p class="fund-card__copy">
+            Fondo listo para el flujo principal con suscripción, cancelación y reflejo
+            inmediato sobre saldo e historial.
+          </p>
+        </div>
+
+        <div class="fund-card__meta">
+          <div class="fund-card__metric">
+            <span class="fund-card__metric-label">Monto mínimo</span>
+            <strong class="fund-card__metric-value">
+              {{ fund.minAmount | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
+            </strong>
+          </div>
+        </div>
+
+        <ng-container *ngIf="vm.subscribedFundIds.has(fund.id); else subscribeAction">
+          <button
+            type="button"
+            class="fund-card__action fund-card__action--secondary"
+            (click)="onRequestCancellation(fund)"
+            [attr.aria-label]="'Cancelar participación en ' + formatFundName(fund.name)"
+          >
+            Cancelar participación
+          </button>
+        </ng-container>
+
+        <ng-template #subscribeAction>
+          <button
+            type="button"
+            class="fund-card__action"
+            (click)="onSubscribe(fund)"
+            [attr.aria-label]="'Suscribirse al fondo ' + formatFundName(fund.name)"
+          >
+            Suscribirse
+          </button>
+        </ng-template>
+      </article>
+    </div>
+  </section>
+
+  <app-subscribe-modal
+    *ngIf="selectedFund() as selectedFund"
+    [fund]="selectedFund"
+    [balance]="vm.balance"
+    [submitError]="modalError()"
+    (clearState)="onClearModalState()"
+    (closeModal)="onCloseModal()"
+    (confirmSubscription)="onConfirmSubscription($event)"
+  />
+</section>

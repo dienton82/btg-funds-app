@@ -1,0 +1,111 @@
+<section class="transactions-page" *ngIf="transactions$ | async as transactions">
+  <header class="page-header">
+    <div>
+      <p class="page-header__eyebrow">BTG Pactual</p>
+      <h1 class="page-header__title">Historial de transacciones</h1>
+      <p class="page-header__subtitle">
+        Consulta los movimientos registrados y revisa con claridad las suscripciones
+        y cancelaciones realizadas durante la sesión.
+      </p>
+    </div>
+
+    <div class="page-header__summary" aria-label="Resumen del historial">
+      <span class="page-header__summary-label">Total movimientos</span>
+      <strong class="page-header__summary-value">{{ transactions.length }}</strong>
+    </div>
+  </header>
+
+  <ng-container *ngIf="transactions.length > 0; else emptyState">
+    <section class="table-shell" aria-label="Tabla de historial de transacciones">
+      <table class="transactions-table">
+        <caption class="sr-only">Historial de suscripciones y cancelaciones de fondos</caption>
+        <thead>
+          <tr>
+            <th>Tipo</th>
+            <th>Fondo</th>
+            <th>Monto</th>
+            <th>Notificación</th>
+            <th>Fecha</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let transaction of transactions; trackBy: trackByTransactionId"
+            [class.transactions-table__row--cancel]="transaction.type === 'CANCEL'"
+          >
+            <td>
+              <span
+                class="type-badge"
+                [class.type-badge--cancel]="transaction.type === 'CANCEL'"
+              >
+                {{ transaction.type === 'SUBSCRIBE' ? 'Suscripción' : 'Cancelación' }}
+              </span>
+            </td>
+            <td>{{ formatFundName(transaction.fundName) }}</td>
+            <td>
+              <span
+                class="amount-badge"
+                [class.amount-badge--positive]="transaction.type === 'CANCEL'"
+              >
+                {{ transaction.type === 'CANCEL' ? '+' : '-' }}
+                {{ transaction.amount | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
+              </span>
+            </td>
+            <td>{{ transaction.notificationMethod | uppercase }}</td>
+            <td>{{ transaction.date | date: 'medium' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="transaction-list" aria-label="Listado de transacciones en móvil">
+      <article
+        class="transaction-card"
+        [class.transaction-card--cancel]="transaction.type === 'CANCEL'"
+        *ngFor="let transaction of transactions; trackBy: trackByTransactionId"
+      >
+        <div class="transaction-card__top">
+          <span
+            class="type-badge"
+            [class.type-badge--cancel]="transaction.type === 'CANCEL'"
+          >
+            {{ transaction.type === 'SUBSCRIBE' ? 'Suscripción' : 'Cancelación' }}
+          </span>
+          <span class="transaction-card__date">{{ transaction.date | date: 'short' }}</span>
+        </div>
+
+        <h2 class="transaction-card__title">{{ formatFundName(transaction.fundName) }}</h2>
+
+        <dl class="transaction-card__details">
+          <div>
+            <dt>Monto</dt>
+            <dd>
+              <span
+                class="amount-badge"
+                [class.amount-badge--positive]="transaction.type === 'CANCEL'"
+              >
+                {{ transaction.type === 'CANCEL' ? '+' : '-' }}
+                {{ transaction.amount | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
+              </span>
+            </dd>
+          </div>
+          <div>
+            <dt>Notificación</dt>
+            <dd>{{ transaction.notificationMethod | uppercase }}</dd>
+          </div>
+        </dl>
+      </article>
+    </section>
+  </ng-container>
+
+  <ng-template #emptyState>
+    <section class="empty-state">
+      <div class="empty-state__icon" aria-hidden="true"></div>
+      <h2 class="empty-state__title">Aún no hay movimientos registrados</h2>
+      <p class="empty-state__copy">
+        Cuando completes una suscripción o una cancelación, el historial aparecerá aquí
+        con el detalle principal de la operación.
+      </p>
+    </section>
+  </ng-template>
+</section>

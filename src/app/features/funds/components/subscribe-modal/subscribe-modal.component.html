@@ -1,0 +1,107 @@
+<div class="modal-backdrop" (click)="onCancel()">
+  <section
+    class="modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="subscribe-modal-title"
+    aria-describedby="subscribe-modal-description"
+    (click)="$event.stopPropagation()"
+  >
+    <header class="modal__header">
+      <div>
+        <p class="modal__eyebrow">Nueva suscripción</p>
+        <h2 id="subscribe-modal-title" class="modal__title">{{ formattedFundName }}</h2>
+        <p id="subscribe-modal-description" class="modal__description">
+          Define el monto y el método de notificación para confirmar la participación.
+        </p>
+      </div>
+
+      <button type="button" class="modal__close" (click)="onCancel()" aria-label="Cerrar modal">
+        Cerrar
+      </button>
+    </header>
+
+    <div class="modal__fund-summary">
+      <div>
+        <span class="modal__summary-label">Categoría</span>
+        <strong>{{ fund.category }}</strong>
+      </div>
+      <div>
+        <span class="modal__summary-label">Monto mínimo</span>
+        <strong>{{ fund.minAmount | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}</strong>
+      </div>
+      <div>
+        <span class="modal__summary-label">Saldo disponible</span>
+        <strong>{{ balance | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}</strong>
+      </div>
+    </div>
+
+    <form class="modal__form" [formGroup]="form" (ngSubmit)="onConfirm()" novalidate>
+      <div class="form-field">
+        <label class="form-field__label" for="subscription-amount">Monto a suscribir</label>
+        <input
+          id="subscription-amount"
+          class="form-field__input"
+          type="number"
+          formControlName="amount"
+          inputmode="numeric"
+          [attr.min]="fund.minAmount"
+          [attr.aria-describedby]="amountDescribedBy"
+          [attr.aria-invalid]="amountControl.invalid && amountControl.touched"
+        />
+        <p id="amount-help" class="form-field__help">
+          Debe ser igual o superior al monto mínimo del fondo.
+        </p>
+
+        <div
+          id="amount-errors"
+          class="form-field__errors"
+          *ngIf="amountControl.touched && amountControl.invalid"
+          role="alert"
+        >
+          <p *ngIf="amountControl.hasError('required')">El monto es obligatorio.</p>
+          <p *ngIf="amountControl.hasError('minAmount')">
+            El monto debe ser igual o superior a
+            {{ fund.minAmount | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}.
+          </p>
+          <p *ngIf="amountControl.hasError('insufficientBalance')">
+            No cuentas con saldo suficiente para esta suscripción.
+          </p>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label class="form-field__label" for="notification-method">Método de notificación</label>
+        <select
+          id="notification-method"
+          class="form-field__input"
+          formControlName="notificationMethod"
+          [attr.aria-describedby]="notificationMethodDescribedBy"
+          [attr.aria-invalid]="notificationMethodControl.invalid && notificationMethodControl.touched"
+        >
+          <option [ngValue]="null">Selecciona una opción</option>
+          <option value="email">Email</option>
+          <option value="sms">SMS</option>
+        </select>
+
+        <div
+          id="notification-errors"
+          class="form-field__errors"
+          *ngIf="notificationMethodControl.touched && notificationMethodControl.invalid"
+          role="alert"
+        >
+          <p *ngIf="notificationMethodControl.hasError('required')">
+            Debes elegir un método de notificación.
+          </p>
+        </div>
+      </div>
+
+      <p class="modal__submit-error" *ngIf="submitError" role="alert">{{ submitError }}</p>
+
+      <footer class="modal__actions">
+        <button type="button" class="button button--ghost" (click)="onClear()">Limpiar</button>
+        <button type="submit" class="button button--primary">Confirmar suscripción</button>
+      </footer>
+    </form>
+  </section>
+</div>
