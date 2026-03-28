@@ -1,4 +1,4 @@
-<section class="transactions-page" *ngIf="transactions$ | async as transactions">
+<section class="transactions-page" *ngIf="vm$ | async as vm">
   <header class="page-header">
     <div>
       <p class="page-header__eyebrow">BTG Pactual</p>
@@ -11,91 +11,117 @@
 
     <div class="page-header__summary" aria-label="Resumen del historial">
       <span class="page-header__summary-label">Total movimientos</span>
-      <strong class="page-header__summary-value">{{ transactions.length }}</strong>
+      <strong class="page-header__summary-value">{{ vm.transactions.length }}</strong>
     </div>
   </header>
 
-  <ng-container *ngIf="transactions.length > 0; else emptyState">
-    <section class="table-shell" aria-label="Tabla de historial de transacciones">
-      <table class="transactions-table">
-        <caption class="sr-only">Historial de suscripciones y cancelaciones de fondos</caption>
-        <thead>
-          <tr>
-            <th>Tipo</th>
-            <th>Fondo</th>
-            <th>Monto</th>
-            <th>Notificación</th>
-            <th>Fecha</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            *ngFor="let transaction of transactions; trackBy: trackByTransactionId"
-            [class.transactions-table__row--cancel]="transaction.type === 'CANCEL'"
-          >
-            <td>
-              <span
-                class="type-badge"
-                [class.type-badge--cancel]="transaction.type === 'CANCEL'"
-              >
-                {{ transaction.type === 'SUBSCRIBE' ? 'Suscripción' : 'Cancelación' }}
-              </span>
-            </td>
-            <td>{{ formatFundName(transaction.fundName) }}</td>
-            <td>
-              <span
-                class="amount-badge"
-                [class.amount-badge--positive]="transaction.type === 'CANCEL'"
-              >
-                {{ transaction.type === 'CANCEL' ? '+' : '-' }}
-                {{ transaction.amount | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
-              </span>
-            </td>
-            <td>{{ transaction.notificationMethod | uppercase }}</td>
-            <td>{{ transaction.date | date: 'medium' }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
+  <section class="loading-state" *ngIf="vm.isInitializing" aria-live="polite">
+    <div>
+      <p class="loading-state__eyebrow">Cargando historial</p>
+      <h2 class="loading-state__title">Preparando transacciones de la sesión</h2>
+      <p class="loading-state__copy">
+        Se está simulando la consulta del historial para reflejar un comportamiento más cercano a una integración real.
+      </p>
+    </div>
 
-    <section class="transaction-list" aria-label="Listado de transacciones en móvil">
-      <article
-        class="transaction-card"
-        [class.transaction-card--cancel]="transaction.type === 'CANCEL'"
-        *ngFor="let transaction of transactions; trackBy: trackByTransactionId"
-      >
-        <div class="transaction-card__top">
-          <span
-            class="type-badge"
-            [class.type-badge--cancel]="transaction.type === 'CANCEL'"
-          >
-            {{ transaction.type === 'SUBSCRIBE' ? 'Suscripción' : 'Cancelación' }}
-          </span>
-          <span class="transaction-card__date">{{ transaction.date | date: 'short' }}</span>
-        </div>
-
-        <h2 class="transaction-card__title">{{ formatFundName(transaction.fundName) }}</h2>
-
-        <dl class="transaction-card__details">
-          <div>
-            <dt>Monto</dt>
-            <dd>
-              <span
-                class="amount-badge"
-                [class.amount-badge--positive]="transaction.type === 'CANCEL'"
-              >
-                {{ transaction.type === 'CANCEL' ? '+' : '-' }}
-                {{ transaction.amount | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
-              </span>
-            </dd>
-          </div>
-          <div>
-            <dt>Notificación</dt>
-            <dd>{{ transaction.notificationMethod | uppercase }}</dd>
-          </div>
-        </dl>
+    <div class="loading-state__cards" aria-hidden="true">
+      <article class="transaction-card transaction-card--loading" *ngFor="let row of loadingRows; trackBy: trackByIndex">
+        <div class="skeleton skeleton--pill"></div>
+        <div class="skeleton skeleton--title"></div>
+        <div class="skeleton skeleton--copy"></div>
+        <div class="skeleton skeleton--copy skeleton--copy-short"></div>
       </article>
-    </section>
+    </div>
+  </section>
+
+  <section class="loading-error" *ngIf="vm.loadError && !vm.isInitializing" role="alert">
+    <h2 class="loading-error__title">No fue posible consultar el historial.</h2>
+    <p class="loading-error__copy">{{ vm.loadError }}</p>
+  </section>
+
+  <ng-container *ngIf="!vm.isInitializing && !vm.loadError">
+    <ng-container *ngIf="vm.transactions.length > 0; else emptyState">
+      <section class="table-shell" aria-label="Tabla de historial de transacciones">
+        <table class="transactions-table">
+          <caption class="sr-only">Historial de suscripciones y cancelaciones de fondos</caption>
+          <thead>
+            <tr>
+              <th>Tipo</th>
+              <th>Fondo</th>
+              <th>Monto</th>
+              <th>Notificación</th>
+              <th>Fecha</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let transaction of vm.transactions; trackBy: trackByTransactionId"
+              [class.transactions-table__row--cancel]="transaction.type === 'CANCEL'"
+            >
+              <td>
+                <span
+                  class="type-badge"
+                  [class.type-badge--cancel]="transaction.type === 'CANCEL'"
+                >
+                  {{ transaction.type === 'SUBSCRIBE' ? 'Suscripción' : 'Cancelación' }}
+                </span>
+              </td>
+              <td>{{ formatFundName(transaction.fundName) }}</td>
+              <td>
+                <span
+                  class="amount-badge"
+                  [class.amount-badge--positive]="transaction.type === 'CANCEL'"
+                >
+                  {{ transaction.type === 'CANCEL' ? '+' : '-' }}
+                  {{ transaction.amount | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
+                </span>
+              </td>
+              <td>{{ transaction.notificationMethod | uppercase }}</td>
+              <td>{{ transaction.date | date: 'medium' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="transaction-list" aria-label="Listado de transacciones en móvil">
+        <article
+          class="transaction-card"
+          [class.transaction-card--cancel]="transaction.type === 'CANCEL'"
+          *ngFor="let transaction of vm.transactions; trackBy: trackByTransactionId"
+        >
+          <div class="transaction-card__top">
+            <span
+              class="type-badge"
+              [class.type-badge--cancel]="transaction.type === 'CANCEL'"
+            >
+              {{ transaction.type === 'SUBSCRIBE' ? 'Suscripción' : 'Cancelación' }}
+            </span>
+            <span class="transaction-card__date">{{ transaction.date | date: 'short' }}</span>
+          </div>
+
+          <h2 class="transaction-card__title">{{ formatFundName(transaction.fundName) }}</h2>
+
+          <dl class="transaction-card__details">
+            <div>
+              <dt>Monto</dt>
+              <dd>
+                <span
+                  class="amount-badge"
+                  [class.amount-badge--positive]="transaction.type === 'CANCEL'"
+                >
+                  {{ transaction.type === 'CANCEL' ? '+' : '-' }}
+                  {{ transaction.amount | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
+                </span>
+              </dd>
+            </div>
+            <div>
+              <dt>Notificación</dt>
+              <dd>{{ transaction.notificationMethod | uppercase }}</dd>
+            </div>
+          </dl>
+        </article>
+      </section>
+    </ng-container>
   </ng-container>
 
   <ng-template #emptyState>

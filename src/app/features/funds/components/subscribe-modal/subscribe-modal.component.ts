@@ -40,6 +40,7 @@ export class SubscribeModalComponent implements OnChanges {
   @Input({ required: true }) fund!: Fund;
   @Input({ required: true }) balance = 0;
   @Input() submitError: string | null = null;
+  @Input() isSubmitting = false;
 
   @Output() readonly closeModal = new EventEmitter<void>();
   @Output() readonly confirmSubscription = new EventEmitter<SubscribeToFundPayload>();
@@ -70,15 +71,27 @@ export class SubscribeModalComponent implements OnChanges {
   }
 
   onCancel(): void {
+    if (this.isSubmitting) {
+      return;
+    }
+
     this.closeModal.emit();
   }
 
   onClear(): void {
+    if (this.isSubmitting) {
+      return;
+    }
+
     this.resetForm();
     this.clearState.emit();
   }
 
   onConfirm(): void {
+    if (this.isSubmitting) {
+      return;
+    }
+
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;

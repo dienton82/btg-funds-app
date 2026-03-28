@@ -16,7 +16,13 @@
         </p>
       </div>
 
-      <button type="button" class="modal__close" (click)="onCancel()" aria-label="Cerrar modal">
+      <button
+        type="button"
+        class="modal__close"
+        (click)="onCancel()"
+        aria-label="Cerrar modal"
+        [disabled]="isSubmitting"
+      >
         Cerrar
       </button>
     </header>
@@ -48,6 +54,7 @@
           [attr.min]="fund.minAmount"
           [attr.aria-describedby]="amountDescribedBy"
           [attr.aria-invalid]="amountControl.invalid && amountControl.touched"
+          [disabled]="isSubmitting"
         />
         <p id="amount-help" class="form-field__help">
           Debe ser igual o superior al monto mínimo del fondo.
@@ -78,6 +85,7 @@
           formControlName="notificationMethod"
           [attr.aria-describedby]="notificationMethodDescribedBy"
           [attr.aria-invalid]="notificationMethodControl.invalid && notificationMethodControl.touched"
+          [disabled]="isSubmitting"
         >
           <option [ngValue]="null">Selecciona una opción</option>
           <option value="email">Email</option>
@@ -99,8 +107,12 @@
       <p class="modal__submit-error" *ngIf="submitError" role="alert">{{ submitError }}</p>
 
       <footer class="modal__actions">
-        <button type="button" class="button button--ghost" (click)="onClear()">Limpiar</button>
-        <button type="submit" class="button button--primary">Confirmar suscripción</button>
+        <button type="button" class="button button--ghost" (click)="onClear()" [disabled]="isSubmitting">
+          Limpiar
+        </button>
+        <button type="submit" class="button button--primary" [disabled]="isSubmitting">
+          {{ isSubmitting ? 'Procesando suscripción...' : 'Confirmar suscripción' }}
+        </button>
       </footer>
     </form>
   </section>

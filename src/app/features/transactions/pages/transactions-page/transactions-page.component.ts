@@ -16,7 +16,8 @@ import { formatFundDisplayName } from '../../../../shared/utils/fund-name.util';
 export class TransactionsPageComponent {
   private readonly fundsService = inject(FundsService);
 
-  readonly transactions$ = this.fundsService.getTransactions();
+  readonly vm$ = this.fundsService.getTransactionsState();
+  readonly loadingRows = Array.from({ length: 3 }, (_, index) => index);
 
   formatFundName(name: string): string {
     return formatFundDisplayName(name);
@@ -24,5 +25,9 @@ export class TransactionsPageComponent {
 
   trackByTransactionId(_index: number, transaction: Transaction): number {
     return transaction.id;
+  }
+
+  trackByIndex(index: number): number {
+    return index;
   }
 }

@@ -25,7 +25,7 @@
       type="button"
       class="cancel-overlay__backdrop"
       aria-label="Cerrar confirmación de cancelación"
-      (click)="onDismissCancellation()"
+      (click)="!vm.isActionProcessing && onDismissCancellation()"
     ></button>
 
     <div class="cancel-dialog">
@@ -38,15 +38,21 @@
       </p>
 
       <div class="cancel-dialog__actions">
-        <button type="button" class="button button--ghost" (click)="onDismissCancellation()">
+        <button
+          type="button"
+          class="button button--ghost"
+          (click)="onDismissCancellation()"
+          [disabled]="vm.isActionProcessing"
+        >
           No, conservar participación
         </button>
         <button
           type="button"
           class="button button--danger"
           (click)="onConfirmCancellation({ fundId: fund.id })"
+          [disabled]="vm.isActionProcessing"
         >
-          Sí, cancelar inscripción
+          {{ vm.isActionProcessing ? 'Procesando cancelación...' : 'Sí, cancelar inscripción' }}
         </button>
       </div>
     </div>
@@ -84,7 +90,32 @@
       </p>
     </div>
 
-    <div class="fund-grid">
+    <section class="load-state" *ngIf="vm.isInitializing" aria-live="polite">
+      <div>
+        <p class="load-state__eyebrow">Cargando catálogo</p>
+        <h3 class="load-state__title">Preparando fondos y saldo inicial</h3>
+        <p class="load-state__copy">
+          Se está simulando la consulta del portafolio para reflejar un flujo más cercano a una API real.
+        </p>
+      </div>
+      <div class="fund-grid fund-grid--skeleton" aria-hidden="true">
+        <article class="fund-card fund-card--skeleton" *ngFor="let card of loadingCards; trackBy: trackByIndex">
+          <div class="skeleton skeleton--pill"></div>
+          <div class="skeleton skeleton--title"></div>
+          <div class="skeleton skeleton--copy"></div>
+          <div class="skeleton skeleton--copy skeleton--copy-short"></div>
+          <div class="skeleton skeleton--amount"></div>
+          <div class="skeleton skeleton--button"></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="load-error" *ngIf="vm.loadError && !vm.isInitializing" role="alert">
+      <p class="load-error__title">No fue posible cargar el catálogo de fondos.</p>
+      <p class="load-error__copy">{{ vm.loadError }}</p>
+    </section>
+
+    <div class="fund-grid" *ngIf="!vm.isInitializing && !vm.loadError">
       <article class="fund-card" *ngFor="let fund of vm.funds; trackBy: trackByFundId">
         <div class="fund-card__top">
           <span class="fund-card__category">{{ fund.category }}</span>
@@ -119,8 +150,9 @@
             class="fund-card__action fund-card__action--secondary"
             (click)="onRequestCancellation(fund)"
             [attr.aria-label]="'Cancelar participación en ' + formatFundName(fund.name)"
+            [disabled]="vm.isActionProcessing"
           >
-            Cancelar participación
+            {{ vm.isActionProcessing ? 'Procesando...' : 'Cancelar participación' }}
           </button>
         </ng-container>
 
@@ -130,8 +162,9 @@
             class="fund-card__action"
             (click)="onSubscribe(fund)"
             [attr.aria-label]="'Suscribirse al fondo ' + formatFundName(fund.name)"
+            [disabled]="vm.isActionProcessing"
           >
-            Suscribirse
+            {{ vm.isActionProcessing ? 'Procesando...' : 'Suscribirse' }}
           </button>
         </ng-template>
       </article>
@@ -143,6 +176,7 @@
     [fund]="selectedFund"
     [balance]="vm.balance"
     [submitError]="modalError()"
+    [isSubmitting]="vm.isActionProcessing"
     (clearState)="onClearModalState()"
     (closeModal)="onCloseModal()"
     (confirmSubscription)="onConfirmSubscription($event)"

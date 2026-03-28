@@ -171,9 +171,15 @@
     color 160ms ease, border-color 160ms ease;
 }
 
-.button:hover,
-.fund-card__action:hover {
+.button:hover:not(:disabled),
+.fund-card__action:hover:not(:disabled) {
   transform: translateY(-1px);
+}
+
+.button:disabled,
+.fund-card__action:disabled {
+  cursor: wait;
+  opacity: 0.72;
 }
 
 .cancel-overlay {
@@ -227,7 +233,7 @@
   font-weight: 700;
 }
 
-.button--ghost:hover {
+.button--ghost:hover:not(:disabled) {
   background: #ffffff;
   border-color: #94a3b8;
   color: #0f172a;
@@ -285,6 +291,10 @@
   transform: translateY(-2px);
   border-color: rgba(15, 118, 110, 0.28);
   box-shadow: 0 14px 28px rgba(15, 23, 42, 0.08);
+}
+
+.fund-card--skeleton {
+  pointer-events: none;
 }
 
 .fund-card__top,

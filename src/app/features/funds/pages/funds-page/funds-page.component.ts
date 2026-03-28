@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { combineLatest, map } from 'rxjs';
 
 import {
   CancelFundPayload,
@@ -33,22 +32,11 @@ export class FundsPageComponent {
   readonly feedback = signal<FeedbackState | null>(null);
   readonly modalError = signal<string | null>(null);
 
-  readonly vm$ = combineLatest({
-    funds: this.fundsService.getFunds(),
-    balance: this.fundsService.getBalance(),
-    transactions: this.fundsService.getTransactions(),
-    subscribedFunds: this.fundsService.getSubscribedFunds()
-  }).pipe(
-    map(({ funds, balance, transactions, subscribedFunds }) => ({
-      funds,
-      balance,
-      transactions,
-      subscribedFundIds: new Set(subscribedFunds.map((fund) => fund.id))
-    }))
-  );
+  readonly vm$ = this.fundsService.getPortfolioState();
 
   readonly isModalOpen = computed(() => this.selectedFund() !== null);
   readonly isCancelPanelOpen = computed(() => this.pendingCancellationFund() !== null);
+  readonly loadingCards = Array.from({ length: 3 }, (_, index) => index);
 
   onSubscribe(fund: Fund): void {
     this.selectedFund.set(fund);
@@ -72,40 +60,40 @@ export class FundsPageComponent {
   }
 
   onConfirmSubscription(payload: SubscribeToFundPayload): void {
-    const result = this.fundsService.subscribeToFund(payload);
+    this.fundsService.subscribeToFund(payload).subscribe((result) => {
+      if (!result.success) {
+        this.modalError.set(result.message);
+        this.showFeedback({
+          type: 'error',
+          message: result.message
+        });
+        return;
+      }
 
-    if (!result.success) {
-      this.modalError.set(result.message);
       this.showFeedback({
-        type: 'error',
-        message: result.message
+        type: 'success',
+        message: `Suscripción exitosa a ${this.formatFundName(result.data.fundName)}.`
       });
-      return;
-    }
-
-    this.showFeedback({
-      type: 'success',
-      message: `Suscripción exitosa a ${this.formatFundName(result.data.fundName)}.`
+      this.onCloseModal();
     });
-    this.onCloseModal();
   }
 
   onConfirmCancellation(payload: CancelFundPayload): void {
-    const result = this.fundsService.cancelFund(payload);
+    this.fundsService.cancelFund(payload).subscribe((result) => {
+      if (!result.success) {
+        this.showFeedback({
+          type: 'error',
+          message: result.message
+        });
+        return;
+      }
 
-    if (!result.success) {
       this.showFeedback({
-        type: 'error',
-        message: result.message
+        type: 'success',
+        message: `Participación cancelada en ${this.formatFundName(result.data.fundName)}.`
       });
-      return;
-    }
-
-    this.showFeedback({
-      type: 'success',
-      message: `Participación cancelada en ${this.formatFundName(result.data.fundName)}.`
+      this.onDismissCancellation();
     });
-    this.onDismissCancellation();
   }
 
   onClearModalState(): void {
@@ -127,6 +115,10 @@ export class FundsPageComponent {
 
   trackByFundId(_index: number, fund: Fund): number {
     return fund.id;
+  }
+
+  trackByIndex(index: number): number {
+    return index;
   }
 
   private showFeedback(feedback: FeedbackState): void {

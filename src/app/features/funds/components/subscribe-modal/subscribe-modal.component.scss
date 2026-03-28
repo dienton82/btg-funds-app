@@ -86,8 +86,8 @@
     box-shadow 160ms ease;
 }
 
-.modal__close:hover,
-.button:hover {
+.modal__close:hover:not(:disabled),
+.button:hover:not(:disabled) {
   transform: translateY(-1px);
 }
 
@@ -173,7 +173,7 @@
   border: 1px solid #d7e0ea;
 }
 
-.button--ghost:hover {
+.button--ghost:hover:not(:disabled) {
   background: #e7edf4;
   color: #243b53;
   border-color: #bcccdc;
@@ -182,6 +182,13 @@
 .button--primary {
   background: linear-gradient(135deg, #0f172a 0%, #1d4d4f 100%);
   color: #ffffff;
+}
+
+.modal__close:disabled,
+.button:disabled,
+.form-field__input:disabled {
+  cursor: wait;
+  opacity: 0.72;
 }
 
 @media (max-width: 640px) {

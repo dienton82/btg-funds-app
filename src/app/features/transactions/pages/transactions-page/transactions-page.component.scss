@@ -92,6 +92,12 @@
   font-weight: 800;
 }
 
+.loading-state__cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
 .table-shell {
   overflow: hidden;
 }
@@ -171,6 +177,10 @@
   border-color: rgba(244, 63, 94, 0.18);
 }
 
+.transaction-card--loading {
+  pointer-events: none;
+}
+
 .transaction-card__top {
   display: flex;
   justify-content: space-between;
@@ -233,6 +243,10 @@
 @media (max-width: 860px) {
   .page-header {
     flex-direction: column;
+  }
+
+  .loading-state__cards {
+    grid-template-columns: 1fr;
   }
 }
 
