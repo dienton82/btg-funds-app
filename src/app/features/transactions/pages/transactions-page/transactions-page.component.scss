@@ -23,10 +23,10 @@
 .table-shell,
 .transaction-card,
 .empty-state {
-  background: linear-gradient(180deg, #ffffff 0%, #fbfcfe 100%);
-  border: 1px solid rgba(148, 163, 184, 0.22);
-  border-radius: 1.5rem;
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
+  background: var(--ui-bg-panel);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-xl);
+  box-shadow: var(--ui-shadow-soft);
 }
 
 .page-header {
@@ -43,7 +43,7 @@
 .empty-state__copy,
 .transaction-card__details dt {
   margin: 0;
-  color: #52606d;
+  color: var(--ui-text-muted);
 }
 
 .page-header__eyebrow {
@@ -57,7 +57,7 @@
 .transaction-card__title,
 .empty-state__title {
   margin: 0;
-  color: #0f172a;
+  color: var(--ui-text-strong);
 }
 
 .page-header__title {
@@ -71,7 +71,6 @@
   max-width: 42rem;
   margin-top: 0.9rem;
   line-height: 1.7;
-  color: #334155;
   font-weight: 500;
 }
 
@@ -79,7 +78,8 @@
   min-width: 10rem;
   padding: 1.1rem 1.2rem;
   border-radius: 1.1rem;
-  background: #f8fafc;
+  background: var(--ui-bg-panel-soft);
+  border: 1px solid rgba(96, 165, 250, 0.14);
   display: grid;
   align-content: start;
   gap: 0.45rem;
@@ -88,7 +88,7 @@
 .page-header__summary-value {
   font-size: 2rem;
   line-height: 1;
-  color: #0f172a;
+  color: var(--ui-text-strong);
   font-weight: 800;
 }
 
@@ -111,7 +111,7 @@
 .transactions-table td {
   padding: 1rem 1.2rem;
   text-align: left;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid rgba(96, 165, 250, 0.12);
 }
 
 .transactions-table th {
@@ -119,8 +119,12 @@
   font-weight: 800;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #475569;
-  background: #f8fafc;
+  color: var(--ui-text-soft);
+  background: rgba(10, 18, 31, 0.9);
+}
+
+.transactions-table td {
+  color: var(--ui-text);
 }
 
 .transactions-table tbody tr:last-child td {
@@ -128,7 +132,7 @@
 }
 
 .transactions-table__row--cancel {
-  background: rgba(255, 241, 242, 0.4);
+  background: rgba(251, 146, 60, 0.08);
 }
 
 .type-badge,
@@ -143,23 +147,23 @@
 }
 
 .type-badge {
-  background: #e0f2fe;
-  color: #075985;
+  background: rgba(34, 211, 238, 0.14);
+  color: #a5f3fc;
 }
 
 .type-badge--cancel {
-  background: #fff1f2;
-  color: #be123c;
+  background: rgba(251, 146, 60, 0.14);
+  color: #fdba74;
 }
 
 .amount-badge {
-  background: #fef2f2;
-  color: #b91c1c;
+  background: rgba(248, 113, 113, 0.12);
+  color: #fecaca;
 }
 
 .amount-badge--positive {
-  background: #ecfdf5;
-  color: #047857;
+  background: rgba(163, 230, 53, 0.12);
+  color: #d9f99d;
 }
 
 .transaction-list {
@@ -174,7 +178,7 @@
 }
 
 .transaction-card--cancel {
-  border-color: rgba(244, 63, 94, 0.18);
+  border-color: rgba(251, 146, 60, 0.18);
 }
 
 .transaction-card--loading {
@@ -208,7 +212,7 @@
 
 .transaction-card__details dd {
   margin: 0;
-  color: #0f172a;
+  color: var(--ui-text-strong);
   font-weight: 700;
   text-align: right;
 }
@@ -225,8 +229,8 @@
   width: 4rem;
   height: 4rem;
   border-radius: 1.25rem;
-  background: radial-gradient(circle at top, rgba(15, 118, 110, 0.16), transparent 72%), #f8fafc;
-  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: radial-gradient(circle at top, rgba(34, 211, 238, 0.16), transparent 72%), rgba(13, 24, 39, 0.96);
+  border: 1px solid rgba(96, 165, 250, 0.18);
 }
 
 .empty-state__title {

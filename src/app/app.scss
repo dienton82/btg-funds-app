@@ -5,7 +5,7 @@
     radial-gradient(circle at top, rgba(56, 189, 248, 0.16), transparent 22%),
     radial-gradient(circle at 80% 0%, rgba(163, 230, 53, 0.08), transparent 18%),
     linear-gradient(180deg, #08111f 0%, #0b1524 48%, #07111b 100%);
-  color: #d8e6fb;
+  color: var(--ui-text);
   font-family: 'Manrope', 'Segoe UI', sans-serif;
 }
 
@@ -36,7 +36,7 @@
 .app-shell__eyebrow,
 .app-shell__subtitle {
   margin: 0;
-  color: rgba(199, 215, 241, 0.78);
+  color: var(--ui-text-muted);
 }
 
 .app-shell__eyebrow {
@@ -49,7 +49,7 @@
 
 .app-shell__title {
   margin: 0;
-  color: #f4f8ff;
+  color: var(--ui-text-strong);
   font-weight: 800;
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.22);
 }
