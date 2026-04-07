@@ -1,174 +1,61 @@
 # BTG Funds App
 
-Aplicación Angular desarrollada como prueba técnica para la gestión de fondos FPV y FIC. El proyecto permite consultar el portafolio disponible, suscribirse a un fondo con validaciones de negocio, cancelar participaciones activas y revisar el historial de transacciones con actualización reactiva del saldo.
-
 ## Descripción
 
-La solución está construida como una SPA con Angular standalone. El estado del dominio se centraliza en una capa de servicio y la simulación de acceso a datos se resuelve mediante un repositorio mock asíncrono para representar un flujo más cercano a una API real. La interfaz prioriza claridad, consistencia visual y separación entre presentación, estado y reglas de negocio.
+Aplicación frontend desarrollada en Angular como prueba técnica para la gestión de fondos FPV y FIC. La solución permite consultar el portafolio disponible, realizar suscripciones, cancelar participaciones activas y revisar el historial de transacciones. El proyecto está enfocado en una arquitectura frontend clara, manejo de estado reactivo y una interfaz consistente con una línea visual dark premium.
 
-## Stack tecnológico
+## Demo
 
-- Angular 20 con standalone components
-- TypeScript en modo estricto
-- RxJS con `BehaviorSubject`, `Observable` y operadores reactivos
-- Reactive Forms para el flujo de suscripción
-- SCSS para estilos modulares y responsive
-- Jasmine y Karma para pruebas unitarias
-- Angular CLI para ejecución, testing y build
+https://dienton82.github.io/btg-funds-app/
 
-## Funcionalidades principales
+## Tecnologías
 
-- Visualización de fondos disponibles con estado `Disponible` o `Suscrito`
-- Consulta del saldo actual y del número de movimientos registrados
-- Suscripción a fondos desde un modal standalone
-- Validación de monto mínimo, saldo suficiente y método de notificación
-- Cancelación de participación con confirmación desde la UI
-- Actualización inmediata de saldo, historial y estado del fondo
-- Historial responsive con tabla en desktop y tarjetas en mobile
-- Feedback visual para operaciones exitosas o fallidas
-- Loading states para carga inicial del catálogo y del historial
+- Angular
+- TypeScript
+- SCSS
+- RxJS
+- Reactive Forms
+- Jasmine
+- Karma
 
-## Decisiones técnicas
+## Funcionalidades
 
-- `FundsRepository` abstrae la simulación de acceso a datos y agrega latencia controlada para representar un comportamiento asíncrono.
-- `FundsService` concentra la lógica de negocio, mantiene el estado reactivo y expone view models semánticos para las pantallas principales.
-- Los componentes de UI se limitan a orquestar interacciones, mostrar datos y manejar estados de presentación.
-- El flujo de suscripción utiliza formularios reactivos con validaciones explícitas y tipado fuerte.
-- Los resultados de acciones críticas se normalizan con un tipo de retorno consistente para éxito y error.
-- El proyecto se entrega como SPA browser-only. Se descartó SSR para evitar complejidad innecesaria y la fricción de prerender en una prueba cuyo alcance es frontend.
+- Visualización de fondos disponibles.
+- Suscripción a fondos con validación de monto mínimo y saldo disponible.
+- Cancelación de participación con actualización inmediata del saldo.
+- Visualización del historial de transacciones.
+- Selección de método de notificación.
+- Validaciones básicas de formulario y mensajes de error.
 
-## Estructura del proyecto
+## Arquitectura y Enfoque
 
-```text
-src/app
-|-- core
-|   `-- services
-|-- shared
-|   |-- models
-|   `-- utils
-`-- features
-    |-- funds
-    |   |-- components
-    |   `-- pages
-    `-- transactions
-        |-- components
-        `-- pages
-```
+La aplicación está organizada por capas para mantener una separación clara de responsabilidades. Los componentes standalone manejan la presentación y la interacción con el usuario. La lógica de negocio y el estado reactivo se concentran en servicios. La simulación de acceso a datos se resuelve mediante una capa mock asíncrona para representar un flujo más cercano a una integración real. El proyecto prioriza claridad de código, mantenibilidad y una experiencia de usuario coherente.
+
+## Diseño UI
+
+La interfaz sigue una línea dark neumorphism con una estética sobria, moderna y consistente. El sistema visual incluye un estilo global de botones, superficies oscuras con profundidad suave, inputs personalizados y un selector custom para evitar estilos nativos del navegador. La intención es mantener una experiencia visual limpia, premium y adecuada para una demostración técnica.
+
+## Mejoras Recientes
+
+- Sistema unificado de botones con variantes globales.
+- Eliminación de estilos nativos del navegador en controles principales.
+- Selector custom con estilo dark y acento verde premium.
+- Dropdown refinado con scroll interno y control de altura.
+- Mayor consistencia visual entre modal, fondos, historial y navegación.
 
 ## Instalación
 
 ```bash
 npm install
+ng serve
 ```
-
-## Ejecución en desarrollo
-
-```bash
-npm start
-```
-
-La aplicación queda disponible en `http://localhost:4200/`.
 
 ## Build
 
 ```bash
-npm run build
+ng build
 ```
 
-## Pruebas y verificación
+## Autor
 
-Verificación de TypeScript:
-
-```bash
-npx tsc -p tsconfig.app.json --noEmit
-```
-
-Ejecución de pruebas unitarias:
-
-```bash
-npm test -- --watch=false --browsers=ChromeHeadless
-```
-
-Comando de validación rápida del repositorio:
-
-```powershell
-./scripts/verify.ps1
-```
-
-## Demo en video
-
-Video corto de funcionamiento:
-
-- https://youtu.be/UWF93AqRKuU
-
-## Supuestos del negocio
-
-- El saldo inicial del usuario es `500000`.
-- Un fondo solo puede tener una participación activa a la vez.
-- La suscripción debe cumplir el monto mínimo definido por cada fondo.
-- La suscripción no puede superar el saldo disponible.
-- La cancelación devuelve el monto efectivamente suscrito, no solo el monto mínimo del fondo.
-- El método de notificación seleccionado en la suscripción se conserva para registrar la cancelación en el historial.
-- No existe persistencia externa ni integración con backend. El estado vive en memoria durante la sesión.
-
-## Notas técnicas relevantes
-
-- La navegación principal se resuelve con rutas standalone para `/funds` y `/transactions`.
-- El historial registra operaciones `SUBSCRIBE` y `CANCEL` con monto, fondo, fecha y método de notificación.
-- La UI refleja en tiempo real el saldo, el estado de cada fondo y el historial a partir del estado centralizado en el servicio.
-- Los nombres de fondos se formatean en la capa de presentación para mejorar legibilidad sin alterar el dato original.
-- El repositorio mock asíncrono introduce tiempos de carga controlados para reflejar mejor un escenario de integración frontend.
-- El proyecto está preparado para revisión local sin configuración adicional distinta a `npm install`.
-
-## Uso de inteligencia artificial y control del desarrollo
-
-El desarrollo se realizó desde Visual Studio Code con apoyo de herramientas de inteligencia artificial utilizadas de forma complementaria. Se emplearon ChatGPT, Codex, GitHub Copilot y Gemini como soporte durante distintas etapas del trabajo, cada una con un rol específico dentro de un flujo controlado.
-
-- ChatGPT: apoyo en arquitectura, análisis de alternativas, diseño de soluciones y evaluación de decisiones técnicas.
-- Codex: ejecución de tareas estructuradas, aplicación de cambios concretos y generación de código bajo instrucciones explícitas y controladas.
-- GitHub Copilot: asistencia de autocompletado y apoyo en fragmentos repetitivos de implementación.
-- Gemini: contraste de soluciones y validación complementaria de criterios técnicos.
-
-La IA fue utilizada como herramienta de apoyo, no como fuente de verdad. Todas las decisiones fueron revisadas manualmente y el control final del código recayó en el desarrollador. La IA no conoce el contexto completo del negocio, por lo que cada resultado fue evaluado y ajustado antes de ser incorporado al proyecto.
-
-## Orquestación del desarrollo
-
-El desarrollo se ejecutó bajo un flujo estructurado de análisis del requerimiento, diseño de la solución, implementación guiada y verificación con ajustes posteriores.
-
-Se evitó incorporar código generado sin contexto suficiente o sin validación explícita. Cada propuesta se evaluó antes de integrarse al repositorio, priorizando claridad, mantenibilidad y control sobre automatización.
-
-## Revisión cruzada del código
-
-El código generado o sugerido durante el desarrollo fue contrastado mediante múltiples herramientas de IA. En la práctica, una herramienta podía proponer una implementación inicial mientras otra se utilizaba para revisar posibles mejoras, detectar inconsistencias, señalar riesgos o cuestionar decisiones técnicas.
-
-Este enfoque de revisión cruzada ayudó a validar decisiones de diseño, detectar errores potenciales y elevar la calidad general del código antes de su incorporación. La validación final de cada cambio siempre fue manual.
-
-## Enfoque de seguridad y calidad
-
-El proyecto sigue prácticas básicas de seguridad frontend alineadas con criterios comunes de OWASP. No se utiliza `innerHTML` ni mecanismos de render inseguro, la entrada del usuario se valida en formularios reactivos, no existen secretos expuestos en frontend y la lógica sensible se centraliza en servicios.
-
-El uso de tipado fuerte reduce errores accidentales y ayuda a mantener coherencia entre dominio, estado y presentación. Además, el código fue revisado para evitar duplicación innecesaria, malas prácticas comunes y cualquier exposición accidental de datos sensibles.
-
-## Scripts de verificación y revisión
-
-La carpeta `scripts/` reúne utilidades de apoyo para revisar el estado del proyecto antes de entregar cambios. Su objetivo es reforzar control operativo y facilitar una validación mínima repetible.
-
-- `verify.ps1`: ejecuta validaciones de compilación y build.
-- `review-security.ps1`: guía una revisión manual breve mediante un checklist de seguridad.
-- `review-frontend.ps1`: guía una revisión manual de consistencia visual, responsive y estados de la interfaz.
-
-Estos scripts funcionan como una capa ligera de verificación previa a entrega y ayudan a mantener control sobre compilación, calidad visible y revisión básica del código.
-
-## Despliegue y acceso
-
-El proyecto fue publicado en GitHub como repositorio público para permitir revisión completa del código fuente, estructura y decisiones de implementación.
-
-La aplicación puede ejecutarse localmente sin configuración adicional distinta a la instalación de dependencias. Esta decisión busca facilitar la revisión técnica del evaluador y reducir fricción durante la puesta en marcha del proyecto.
-
-## Posibles mejoras futuras
-
-- Incorporar pruebas unitarias adicionales sobre componentes de presentación y formularios.
-- Agregar filtros y ordenamiento al historial de transacciones.
-- Extraer tokens visuales compartidos para consolidar colores, sombras y espaciados.
-- Persistir el estado en backend o almacenamiento local.
-- Añadir autenticación y gestión de perfiles si el alcance del producto creciera.
+Yeison Álvarez
