@@ -79,18 +79,52 @@
 
       <div class="form-field">
         <label class="form-field__label" for="notification-method">Método de notificación</label>
-        <select
-          id="notification-method"
-          class="form-field__input"
-          formControlName="notificationMethod"
-          [attr.aria-describedby]="notificationMethodDescribedBy"
-          [attr.aria-invalid]="notificationMethodControl.invalid && notificationMethodControl.touched"
-          [disabled]="isSubmitting"
-        >
-          <option [ngValue]="null" disabled>Selecciona una opción</option>
-          <option value="email">Email</option>
-          <option value="sms">SMS</option>
-        </select>
+        <div class="form-field__select-shell" #notificationShell>
+          <button
+            id="notification-method"
+            type="button"
+            class="form-field__input form-field__select"
+            [class.form-field__select--placeholder]="notificationMethodControl.value === null"
+            [class.form-field__select--open]="isNotificationMenuOpen"
+            [class.form-field__select--filled]="notificationMethodControl.value !== null"
+            role="combobox"
+            aria-haspopup="listbox"
+            [attr.aria-expanded]="isNotificationMenuOpen"
+            aria-controls="notification-method-listbox"
+            [attr.aria-describedby]="notificationMethodDescribedBy"
+            [attr.aria-invalid]="notificationMethodControl.invalid && notificationMethodControl.touched"
+            [disabled]="isSubmitting"
+            (click)="toggleNotificationMenu()"
+            (keydown)="onNotificationTriggerKeydown($event)"
+          >
+            <span>{{ selectedNotificationLabel }}</span>
+            <span class="form-field__select-icon" aria-hidden="true"></span>
+          </button>
+
+          <div
+            class="form-field__select-menu"
+            [class.form-field__select-menu--up]="notificationMenuDirection === 'up'"
+            *ngIf="isNotificationMenuOpen"
+            id="notification-method-listbox"
+            role="listbox"
+            [attr.aria-activedescendant]="selectedNotificationIndex >= 0 ? 'notification-option-' + selectedNotificationIndex : null"
+          >
+            <button
+              #notificationOption
+              *ngFor="let option of notificationOptions; let index = index"
+              type="button"
+              class="form-field__select-option"
+              [class.form-field__select-option--selected]="notificationMethodControl.value === option.value"
+              [id]="'notification-option-' + index"
+              role="option"
+              [attr.aria-selected]="notificationMethodControl.value === option.value"
+              (click)="selectNotificationMethod(option.value)"
+              (keydown)="onNotificationOptionKeydown($event, index)"
+            >
+              {{ option.label }}
+            </button>
+          </div>
+        </div>
 
         <div
           id="notification-errors"

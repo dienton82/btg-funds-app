@@ -1,11 +1,16 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   EventEmitter,
+  HostListener,
   Input,
   OnChanges,
   Output,
-  SimpleChanges
+  QueryList,
+  SimpleChanges,
+  ViewChild,
+  ViewChildren
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -45,6 +50,18 @@ export class SubscribeModalComponent implements OnChanges {
   @Output() readonly closeModal = new EventEmitter<void>();
   @Output() readonly confirmSubscription = new EventEmitter<SubscribeToFundPayload>();
   @Output() readonly clearState = new EventEmitter<void>();
+  @ViewChildren('notificationOption')
+  private readonly notificationOptionButtons?: QueryList<ElementRef<HTMLButtonElement>>;
+  @ViewChild('notificationShell')
+  private readonly notificationShell?: ElementRef<HTMLElement>;
+
+  readonly notificationOptions: ReadonlyArray<{ value: NotificationMethod; label: string }> = [
+    { value: 'email', label: 'Email' },
+    { value: 'sms', label: 'SMS' }
+  ];
+
+  isNotificationMenuOpen = false;
+  notificationMenuDirection: 'down' | 'up' = 'down';
 
   readonly form = new FormGroup<SubscribeForm>({
     amount: new FormControl<number | null>(null, {
@@ -110,6 +127,31 @@ export class SubscribeModalComponent implements OnChanges {
     });
   }
 
+  @HostListener('document:keydown.escape')
+  onEscapeKey(): void {
+    if (this.isNotificationMenuOpen) {
+      this.closeNotificationMenu();
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (!this.isNotificationMenuOpen) {
+      return;
+    }
+
+    const clickTarget = event.target;
+    if (!(clickTarget instanceof Node)) {
+      return;
+    }
+
+    if (this.notificationShell?.nativeElement.contains(clickTarget)) {
+      return;
+    }
+
+    this.closeNotificationMenu();
+  }
+
   get amountControl(): FormControl<number | null> {
     return this.form.controls.amount;
   }
@@ -134,14 +176,115 @@ export class SubscribeModalComponent implements OnChanges {
     return formatFundDisplayName(this.fund.name);
   }
 
+  get selectedNotificationLabel(): string {
+    const selectedMethod = this.notificationMethodControl.value;
+    return this.notificationOptions.find((option) => option.value === selectedMethod)?.label ?? 'Selecciona una opción';
+  }
+
+  get selectedNotificationIndex(): number {
+    const selectedMethod = this.notificationMethodControl.value;
+    return this.notificationOptions.findIndex((option) => option.value === selectedMethod);
+  }
+
+  toggleNotificationMenu(): void {
+    if (this.isSubmitting) {
+      return;
+    }
+
+    this.isNotificationMenuOpen = !this.isNotificationMenuOpen;
+
+    if (this.isNotificationMenuOpen) {
+      queueMicrotask(() => {
+        this.updateNotificationMenuDirection();
+        this.focusNotificationOption(this.selectedNotificationIndex >= 0 ? this.selectedNotificationIndex : 0);
+      });
+    }
+  }
+
+  closeNotificationMenu(): void {
+    this.isNotificationMenuOpen = false;
+  }
+
+  selectNotificationMethod(method: NotificationMethod): void {
+    if (this.isSubmitting) {
+      return;
+    }
+
+    this.notificationMethodControl.setValue(method);
+    this.notificationMethodControl.markAsDirty();
+    this.notificationMethodControl.markAsTouched();
+    this.notificationMethodControl.updateValueAndValidity({ emitEvent: false });
+    this.closeNotificationMenu();
+  }
+
+  onNotificationTriggerKeydown(event: KeyboardEvent): void {
+    if (this.isSubmitting) {
+      return;
+    }
+
+    if (event.key === 'ArrowDown' || event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      if (!this.isNotificationMenuOpen) {
+        this.toggleNotificationMenu();
+        return;
+      }
+
+      this.focusNotificationOption(this.selectedNotificationIndex >= 0 ? this.selectedNotificationIndex : 0);
+    }
+
+    if (event.key === 'Escape') {
+      this.closeNotificationMenu();
+    }
+  }
+
+  onNotificationOptionKeydown(event: KeyboardEvent, index: number): void {
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      this.focusNotificationOption((index + 1) % this.notificationOptions.length);
+    }
+
+    if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      this.focusNotificationOption((index - 1 + this.notificationOptions.length) % this.notificationOptions.length);
+    }
+
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      this.closeNotificationMenu();
+    }
+  }
+
   private resetForm(): void {
     this.form.reset({
       amount: this.fund.minAmount,
       notificationMethod: null
     });
+    this.closeNotificationMenu();
     this.form.markAsPristine();
     this.form.markAsUntouched();
     this.form.updateValueAndValidity({ emitEvent: false });
+  }
+
+  private focusNotificationOption(index: number): void {
+    this.notificationOptionButtons?.get(index)?.nativeElement.focus();
+  }
+
+  private updateNotificationMenuDirection(): void {
+    const shell = this.notificationShell?.nativeElement;
+    if (!shell) {
+      this.notificationMenuDirection = 'down';
+      return;
+    }
+
+    const rect = shell.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+    const estimatedMenuHeight = 132;
+    const spacing = 12;
+    const spaceBelow = viewportHeight - rect.bottom;
+    const spaceAbove = rect.top;
+
+    this.notificationMenuDirection =
+      spaceBelow >= estimatedMenuHeight || spaceBelow >= spaceAbove - spacing ? 'down' : 'up';
   }
 
   private minAmountValidator(): ValidatorFn {
