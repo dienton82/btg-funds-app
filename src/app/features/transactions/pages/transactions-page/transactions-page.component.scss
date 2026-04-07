@@ -79,7 +79,7 @@
   padding: 1.1rem 1.2rem;
   border-radius: 1.1rem;
   background: var(--ui-bg-panel-soft);
-  border: 1px solid rgba(96, 165, 250, 0.14);
+  border: 1px solid var(--ui-border);
   display: grid;
   align-content: start;
   gap: 0.45rem;
@@ -111,7 +111,7 @@
 .transactions-table td {
   padding: 1rem 1.2rem;
   text-align: left;
-  border-bottom: 1px solid rgba(96, 165, 250, 0.12);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .transactions-table th {
@@ -120,7 +120,7 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--ui-text-soft);
-  background: rgba(10, 18, 31, 0.9);
+  background: rgba(38, 38, 38, 0.92);
 }
 
 .transactions-table td {
@@ -132,7 +132,7 @@
 }
 
 .transactions-table__row--cancel {
-  background: rgba(251, 146, 60, 0.08);
+  background: rgba(66, 48, 48, 0.34);
 }
 
 .type-badge,
@@ -147,23 +147,23 @@
 }
 
 .type-badge {
-  background: rgba(34, 211, 238, 0.14);
-  color: #a5f3fc;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(240, 240, 240, 0.9);
 }
 
 .type-badge--cancel {
-  background: rgba(251, 146, 60, 0.14);
-  color: #fdba74;
+  background: rgba(214, 196, 196, 0.12);
+  color: #ead9d9;
 }
 
 .amount-badge {
-  background: rgba(248, 113, 113, 0.12);
-  color: #fecaca;
+  background: rgba(214, 196, 196, 0.12);
+  color: #ead9d9;
 }
 
 .amount-badge--positive {
-  background: rgba(163, 230, 53, 0.12);
-  color: #d9f99d;
+  background: rgba(228, 234, 228, 0.08);
+  color: rgba(236, 240, 236, 0.88);
 }
 
 .transaction-list {
@@ -178,7 +178,7 @@
 }
 
 .transaction-card--cancel {
-  border-color: rgba(251, 146, 60, 0.18);
+  border-color: rgba(214, 196, 196, 0.12);
 }
 
 .transaction-card--loading {
@@ -229,8 +229,8 @@
   width: 4rem;
   height: 4rem;
   border-radius: 1.25rem;
-  background: radial-gradient(circle at top, rgba(34, 211, 238, 0.16), transparent 72%), rgba(13, 24, 39, 0.96);
-  border: 1px solid rgba(96, 165, 250, 0.18);
+  background: radial-gradient(circle at top, rgba(255, 255, 255, 0.06), transparent 72%), rgba(46, 46, 46, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .empty-state__title {
