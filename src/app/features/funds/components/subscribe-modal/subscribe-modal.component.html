@@ -87,7 +87,7 @@
           [attr.aria-invalid]="notificationMethodControl.invalid && notificationMethodControl.touched"
           [disabled]="isSubmitting"
         >
-          <option [ngValue]="null">Selecciona una opción</option>
+          <option [ngValue]="null" disabled>Selecciona una opción</option>
           <option value="email">Email</option>
           <option value="sms">SMS</option>
         </select>

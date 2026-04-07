@@ -129,13 +129,20 @@ textarea {
 :where(select) optgroup {
   background: #292929;
   color: var(--ui-text);
+  box-shadow: inset 0 0 0 999px #292929;
+}
+
+:where(select) option[disabled] {
+  color: var(--ui-text-soft);
+  box-shadow: inset 0 0 0 999px #292929;
 }
 
 :where(select) option:checked,
 :where(select) option:hover,
 :where(select) option:focus {
-  background: linear-gradient(180deg, rgba(117, 183, 152, 0.22) 0%, rgba(91, 148, 122, 0.22) 100%);
+  background: rgba(117, 183, 152, 0.22);
   color: var(--ui-accent-green-text);
+  box-shadow: inset 0 0 0 999px rgba(117, 183, 152, 0.22);
 }
 
 :where(input[type='file']) {
