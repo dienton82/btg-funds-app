@@ -40,7 +40,7 @@
       <div class="cancel-dialog__actions">
         <button
           type="button"
-          class="button button--ghost"
+          class="button ui-button ui-button--outline"
           (click)="onDismissCancellation()"
           [disabled]="vm.isActionProcessing"
         >
@@ -48,7 +48,7 @@
         </button>
         <button
           type="button"
-          class="button button--danger"
+          class="button ui-button ui-button--danger"
           (click)="onConfirmCancellation({ fundId: fund.id })"
           [disabled]="vm.isActionProcessing"
         >
@@ -147,7 +147,7 @@
         <ng-container *ngIf="vm.subscribedFundIds.has(fund.id); else subscribeAction">
           <button
             type="button"
-            class="fund-card__action fund-card__action--secondary"
+            class="fund-card__action ui-button ui-button--danger"
             (click)="onRequestCancellation(fund)"
             [attr.aria-label]="'Cancelar participación en ' + formatFundName(fund.name)"
             [disabled]="vm.isActionProcessing"
@@ -159,7 +159,7 @@
         <ng-template #subscribeAction>
           <button
             type="button"
-            class="fund-card__action"
+            class="fund-card__action ui-button ui-button--primary"
             (click)="onSubscribe(fund)"
             [attr.aria-label]="'Suscribirse al fondo ' + formatFundName(fund.name)"
             [disabled]="vm.isActionProcessing"

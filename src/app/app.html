@@ -1,26 +1,26 @@
 <div class="app-shell">
   <header class="app-shell__header">
     <div>
-      <p class="app-shell__eyebrow">Prueba tecnica BTG Pactual</p>
+      <p class="app-shell__eyebrow">Prueba técnica BTG Pactual</p>
       <h1 class="app-shell__title">Plataforma de manejo de fondos</h1>
       <p class="app-shell__subtitle">
-        Demo funcional en Angular para suscripcion, cancelacion y consulta de historial.
+        Demo funcional en Angular para suscripción, cancelación y consulta de historial.
       </p>
     </div>
 
-    <nav class="app-shell__nav" aria-label="Navegacion principal">
+    <nav class="app-shell__nav" aria-label="Navegación principal">
       <a
         routerLink="/funds"
-        routerLinkActive="app-shell__link--active"
+        routerLinkActive="app-shell__link--active ui-button--active"
         [routerLinkActiveOptions]="{ exact: true }"
-        class="app-shell__link"
+        class="app-shell__link ui-button ui-button--outline"
       >
         Fondos
       </a>
       <a
         routerLink="/transactions"
-        routerLinkActive="app-shell__link--active"
-        class="app-shell__link"
+        routerLinkActive="app-shell__link--active ui-button--active"
+        class="app-shell__link ui-button ui-button--outline"
       >
         Historial
       </a>

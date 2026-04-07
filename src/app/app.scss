@@ -2,9 +2,10 @@
   display: block;
   min-height: 100vh;
   background:
-    radial-gradient(circle at top, rgba(15, 118, 110, 0.08), transparent 28%),
-    #f5f7fa;
-  color: #102a43;
+    radial-gradient(circle at top, rgba(56, 189, 248, 0.16), transparent 22%),
+    radial-gradient(circle at 80% 0%, rgba(163, 230, 53, 0.08), transparent 18%),
+    linear-gradient(180deg, #08111f 0%, #0b1524 48%, #07111b 100%);
+  color: #d8e6fb;
   font-family: 'Manrope', 'Segoe UI', sans-serif;
 }
 
@@ -15,8 +16,7 @@
 }
 
 :focus-visible {
-  outline: 3px solid rgba(37, 99, 235, 0.3);
-  outline-offset: 2px;
+  outline: 0;
 }
 
 .app-shell {
@@ -36,20 +36,26 @@
 .app-shell__eyebrow,
 .app-shell__subtitle {
   margin: 0;
-  color: #52606d;
+  color: rgba(199, 215, 241, 0.78);
 }
 
 .app-shell__eyebrow {
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.3rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  font-weight: 700;
 }
 
 .app-shell__title {
   margin: 0;
+  color: #f4f8ff;
   font-weight: 800;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.22);
 }
 
 .app-shell__subtitle {
-  margin-top: 0.5rem;
+  margin-top: 0.55rem;
   max-width: 42rem;
   line-height: 1.6;
 }
@@ -61,26 +67,14 @@
 }
 
 .app-shell__link {
-  text-decoration: none;
-  color: #243b53;
-  padding: 0.65rem 1rem;
-  border-radius: 999px;
-  border: 1px solid #bcccdc;
-  background: #ffffff;
-  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+  min-width: 8rem;
 }
 
-.app-shell__link:hover {
-  border-color: #94a3b8;
-  background: #f8fafc;
-  color: #243b53;
-}
-
-.app-shell__link--active,
-.app-shell__link--active:hover {
-  background: #102a43;
-  border-color: #102a43;
-  color: #ffffff;
+.app-shell__link--active {
+  --ui-button-bg: linear-gradient(145deg, #1a3156 0%, #10223d 48%, #0b182c 100%);
+  --ui-button-border-color: rgba(34, 211, 238, 0.42);
+  --ui-button-fg: #f3f8ff;
+  --ui-button-glow: 0 0 22px rgba(34, 211, 238, 0.18);
 }
 
 .app-shell__content {
