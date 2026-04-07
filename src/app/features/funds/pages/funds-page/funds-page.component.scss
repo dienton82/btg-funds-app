@@ -94,7 +94,7 @@
   align-content: center;
   gap: 0.75rem;
   background: var(--ui-bg-elevated);
-  border-color: var(--ui-border);
+  border-color: rgba(117, 183, 152, 0.12);
   color: var(--ui-text-strong);
 }
 
@@ -141,7 +141,7 @@
 }
 
 .feedback-toast__eyebrow {
-  color: rgba(232, 238, 232, 0.82);
+  color: rgba(212, 236, 220, 0.86);
 }
 
 .feedback-toast__message {
@@ -294,17 +294,17 @@
 }
 
 .fund-card__category {
-  background: rgba(255, 255, 255, 0.06);
-  color: rgba(240, 240, 240, 0.9);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(239, 239, 239, 0.88);
 }
 
 .fund-card__status {
-  background: rgba(228, 234, 228, 0.08);
-  color: rgba(236, 240, 236, 0.88);
+  background: rgba(117, 183, 152, 0.14);
+  color: rgba(224, 242, 231, 0.9);
 }
 
 .fund-card__status--subscribed {
-  background: rgba(255, 255, 255, 0.09);
+  background: rgba(255, 255, 255, 0.08);
   color: rgba(244, 244, 244, 0.92);
 }
 

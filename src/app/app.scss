@@ -71,9 +71,10 @@
 }
 
 .app-shell__link--active {
-  --ui-button-bg: linear-gradient(145deg, #3a3a3a 0%, #313131 48%, #2a2a2a 100%);
-  --ui-button-border-color: rgba(255, 255, 255, 0.1);
-  --ui-button-fg: #f3f3f3;
+  --ui-button-bg: linear-gradient(145deg, #38463d 0%, #313c35 48%, #2b342e 100%);
+  --ui-button-border-color: rgba(117, 183, 152, 0.24);
+  --ui-button-fg: var(--ui-accent-green-text);
+  --ui-button-glow: 0 0 16px rgba(117, 183, 152, 0.08);
 }
 
 .app-shell__content {

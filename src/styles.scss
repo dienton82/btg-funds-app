@@ -17,6 +17,11 @@
   --ui-border-accent: rgba(255, 255, 255, 0.18);
   --ui-border-success: rgba(212, 222, 212, 0.14);
   --ui-border-danger: rgba(226, 190, 190, 0.14);
+  --ui-accent-green: #75b798;
+  --ui-accent-green-soft: rgba(117, 183, 152, 0.16);
+  --ui-accent-green-border: rgba(117, 183, 152, 0.3);
+  --ui-accent-green-glow: rgba(117, 183, 152, 0.2);
+  --ui-accent-green-text: #e4f1e9;
   --ui-text: #e5e5e5;
   --ui-text-strong: #f2f2f2;
   --ui-text-muted: rgba(229, 229, 229, 0.72);
@@ -33,7 +38,8 @@
   --ui-shadow-inset:
     inset 8px 8px 16px rgba(18, 18, 18, 0.48),
     inset -6px -6px 14px rgba(255, 255, 255, 0.03);
-  --ui-focus-ring: 0 0 0 2px rgba(31, 31, 31, 0.94), 0 0 0 4px rgba(255, 255, 255, 0.12);
+  --ui-focus-ring: 0 0 0 2px rgba(31, 31, 31, 0.94), 0 0 0 4px rgba(117, 183, 152, 0.18),
+    0 0 18px rgba(117, 183, 152, 0.12);
   --ui-radius-xl: 1.5rem;
   --ui-radius-lg: 1.1rem;
   --ui-radius-md: 0.95rem;
@@ -91,12 +97,12 @@ textarea {
 
 :where(input:not([type='checkbox']):not([type='radio']):not([type='range']), select, textarea):hover:not(:disabled) {
   background: var(--ui-bg-input-hover);
-  border-color: rgba(255, 255, 255, 0.12);
+  border-color: rgba(117, 183, 152, 0.18);
 }
 
 :where(input:not([type='checkbox']):not([type='radio']):not([type='range']), select, textarea):focus-visible {
   outline: 0;
-  border-color: var(--ui-border-accent);
+  border-color: var(--ui-accent-green-border);
   box-shadow: var(--ui-shadow-inset), var(--ui-focus-ring);
 }
 
@@ -113,7 +119,7 @@ textarea {
   padding-right: 3rem;
   background-image:
     linear-gradient(180deg, #2b2b2b 0%, #252525 100%),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23d9d9d9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2375b798' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat, no-repeat;
   background-position: center, right 1rem center;
   background-size: 100% 100%, 0.95rem;
@@ -123,6 +129,13 @@ textarea {
 :where(select) optgroup {
   background: #292929;
   color: var(--ui-text);
+}
+
+:where(select) option:checked,
+:where(select) option:hover,
+:where(select) option:focus {
+  background: linear-gradient(180deg, rgba(117, 183, 152, 0.22) 0%, rgba(91, 148, 122, 0.22) 100%);
+  color: var(--ui-accent-green-text);
 }
 
 :where(input[type='file']) {
@@ -147,7 +160,7 @@ textarea {
 
 :where(input[type='file'])::file-selector-button:hover {
   transform: translateY(-1px);
-  border-color: rgba(255, 255, 255, 0.12);
+  border-color: var(--ui-accent-green-border);
   box-shadow: var(--ui-button-shadow-hover);
 }
 
@@ -210,21 +223,24 @@ textarea {
 }
 
 :where(.ui-button--primary) {
-  --ui-button-bg: linear-gradient(145deg, #353535 0%, #2d2d2d 100%);
-  --ui-button-border-color: rgba(255, 255, 255, 0.08);
-  --ui-button-fg: #f3f3f3;
+  --ui-button-bg: linear-gradient(145deg, #4b6f5c 0%, #3d5d4e 52%, #2f493e 100%);
+  --ui-button-border-color: rgba(156, 208, 179, 0.34);
+  --ui-button-fg: var(--ui-accent-green-text);
+  --ui-button-glow: 0 0 20px rgba(117, 183, 152, 0.14);
 }
 
 :where(.ui-button--secondary) {
-  --ui-button-bg: linear-gradient(145deg, #3a3a3a 0%, #303030 100%);
-  --ui-button-border-color: rgba(255, 255, 255, 0.07);
-  --ui-button-fg: #ededed;
+  --ui-button-bg: linear-gradient(145deg, #343934 0%, #2c312c 100%);
+  --ui-button-border-color: rgba(117, 183, 152, 0.16);
+  --ui-button-fg: #dfe8e2;
+  --ui-button-glow: 0 0 16px rgba(117, 183, 152, 0.08);
 }
 
 :where(.ui-button--outline) {
   --ui-button-bg: linear-gradient(145deg, #2c2c2c 0%, #252525 100%);
-  --ui-button-border-color: rgba(255, 255, 255, 0.08);
-  --ui-button-fg: #dfdfdf;
+  --ui-button-border-color: rgba(117, 183, 152, 0.18);
+  --ui-button-fg: #dde6df;
+  --ui-button-glow: 0 0 14px rgba(117, 183, 152, 0.06);
 }
 
 :where(.ui-button--danger) {
@@ -287,7 +303,7 @@ textarea {
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(229, 229, 229, 0.78);
+  color: rgba(198, 225, 208, 0.82);
 }
 
 .load-state__title,

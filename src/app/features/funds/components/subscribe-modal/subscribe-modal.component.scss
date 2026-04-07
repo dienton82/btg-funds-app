@@ -53,7 +53,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(229, 229, 229, 0.78);
+  color: rgba(198, 225, 208, 0.8);
 }
 
 .modal__title {
@@ -84,7 +84,7 @@
   padding: 1rem;
   border-radius: var(--ui-radius-lg);
   background: var(--ui-bg-panel-soft);
-  border: 1px solid var(--ui-border);
+  border: 1px solid rgba(117, 183, 152, 0.12);
   box-shadow: var(--ui-shadow-inset);
 }
 
